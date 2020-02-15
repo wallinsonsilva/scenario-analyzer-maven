@@ -1,0 +1,6 @@
+br\ufrn\ppgsc\scenario\analyzer\common\annotations\Security.class
+br\ufrn\ppgsc\scenario\analyzer\common\annotations\arq\Component.class
+br\ufrn\ppgsc\scenario\analyzer\common\annotations\Performance.class
+br\ufrn\ppgsc\scenario\analyzer\common\util\MemberUtil.class
+br\ufrn\ppgsc\scenario\analyzer\common\annotations\arq\Scenario.class
+br\ufrn\ppgsc\scenario\analyzer\common\annotations\Reliability.class
