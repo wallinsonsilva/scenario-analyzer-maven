@@ -12,8 +12,12 @@ import java.lang.annotation.Annotation;
 //		return br.ufrn.ppgsc.scenario.analyzer.common.annotations.arq.Scenario.class;
 //	}
 //
-//	@Pointcut("execution(@br.ufrn.ppgsc.scenario.analyzer.common.annotations.arq.Scenario * *(..))")
-//	public void entryPoint() {
-//	}
+//		@Pointcut("execution(@br.ufrn.ppgsc.scenario.analyzer.common.annotations.arq.Scenario * *(..))")
+//public void entryPoint() {
+//}
+//
+//@Pointcut("cflow(execution(* set*(..)) || execution(* get*(..)) || execution(* is*(..)))")
+//public void exclusionPoint() {
+//}
 //
 //}

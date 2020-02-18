@@ -59,7 +59,7 @@ public abstract class AbstractAspectEntryPoint {
 	@Around("entryPointFlow() && exclusionPointFlow()")
 	public final Object cgbuilding(ProceedingJoinPoint thisJoinPoint) throws Throwable {
 		System.out.println("ENTROU NO METODO: cgbuilding");
-		System.out.println(getAnnotationClass());
+//		System.out.println(getAnnotationClass());
 		long begin, end;
 
 		SystemExecution execution = RuntimeCallGraph.getInstance().getCurrentExecution();
@@ -75,8 +75,8 @@ public abstract class AbstractAspectEntryPoint {
 		 * Se achou a anotação de cenário, começa a criar as estruturas para o
 		 * elemento. Depois adiciona para a execução atual.
 		 */
-		System.out.println(nodes_stack.empty());
-		if (AspectUtil.isScenarioEntryPoint(member, getAnnotationClass(), nodes_stack.empty())) {
+//		System.out.println(nodes_stack.empty());
+		if (AspectUtil.isScenarioEntryPoint(member, br.ufrn.ppgsc.scenario.analyzer.common.annotations.arq.Scenario.class, nodes_stack.empty())) {
 			RuntimeScenario scenario = new RuntimeScenario(AspectUtil.getEntryPointName(member, getAnnotationClass()),
 					node, AspectUtil.getContextParameterMap());
 

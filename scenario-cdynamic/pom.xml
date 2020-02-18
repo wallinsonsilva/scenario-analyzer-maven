@@ -6,10 +6,12 @@
 	<artifactId>scenario-cdynamic</artifactId>
 	<version>1.0.0</version>
 
+
 	<properties>
 		<aspectj.version>1.8.4</aspectj.version>
 		<java.source-target.version>1.8</java.source-target.version>
 		<maven.test.skip>true</maven.test.skip>
+		<hibernate.version>5.2.8.Final</hibernate.version>
 	</properties>
 
 
@@ -89,17 +91,21 @@
 			<version>9.3-1102-jdbc41</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<version>1.0.1.Final</version>
-		</dependency>
+		<!-- teste -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.hibernate.javax.persistence</groupId> -->
+		<!-- <artifactId>hibernate-jpa-2.0-api</artifactId> -->
+		<!-- <version>1.0.1.Final</version> -->
+		<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>hibernate</groupId> -->
-<!-- 			<artifactId>hibernate</artifactId> -->
-<!-- 			<version>3.0.5</version> -->
-<!-- 		</dependency> -->
+
+
+
+		<!-- <dependency> -->
+		<!-- <groupId>hibernate</groupId> -->
+		<!-- <artifactId>hibernate</artifactId> -->
+		<!-- <version>3.0.5</version> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -125,22 +131,36 @@
 			<version>2.6</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-annotations -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.hibernate</groupId> -->
-<!-- 			<artifactId>hibernate-annotations</artifactId> -->
-<!-- 			<version>3.3.1.GA</version> -->
-<!-- 		</dependency> -->
-
-		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+		<!-- CRUD -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>3.6.4.Final</version>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
 		</dependency>
 
 
 
+		<!-- Teste -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.hibernate</groupId> -->
+		<!-- <artifactId>hibernate-core</artifactId> -->
+		<!-- <version>3.6.4.Final</version> -->
+		<!-- </dependency> -->
+
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.12.0.GA</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-annotations -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.hibernate</groupId> -->
+		<!-- <artifactId>hibernate-annotations</artifactId> -->
+		<!-- <version>3.3.1.GA</version> -->
+		<!-- </dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 
 		<!-- <dependency> -->
 		<!-- <groupId>antlr</groupId> -->
@@ -159,12 +179,6 @@
 		<!-- <artifactId>dom4j</artifactId> -->
 		<!-- <version>1.6.1</version> -->
 		<!-- </dependency> -->
-
-	<dependency>
-		<groupId>javassist</groupId>
-		<artifactId>javassist</artifactId>
-		<version>3.12.0.GA</version>
-	</dependency>
 
 		<!-- <dependency> -->
 		<!-- <groupId>org.slf4j</groupId> -->
