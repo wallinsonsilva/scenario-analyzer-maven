@@ -59,7 +59,6 @@ public abstract class AbstractAspectEntryPoint {
 	@Around("entryPointFlow() && exclusionPointFlow()")
 	public final Object cgbuilding(ProceedingJoinPoint thisJoinPoint) throws Throwable {
 		System.out.println("ENTROU NO METODO: cgbuilding");
-//		System.out.println(getAnnotationClass());
 		long begin, end;
 
 		SystemExecution execution = RuntimeCallGraph.getInstance().getCurrentExecution();
