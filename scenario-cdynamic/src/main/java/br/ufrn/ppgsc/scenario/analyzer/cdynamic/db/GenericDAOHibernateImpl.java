@@ -3,94 +3,80 @@ package br.ufrn.ppgsc.scenario.analyzer.cdynamic.db;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.TypedQuery;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 
 public class GenericDAOHibernateImpl<T extends Serializable> implements GenericDAO<T> {
 
-	// Session is a static attribute
 	private static Session s;
-	private static StandardServiceRegistry registry;
-	private static SessionFactory sessionFactory;
 
-	// Only one session for all application
-	public GenericDAOHibernateImpl() {
-		/**
-		 * Implementação para hibernate 3.6.4
-		 */
-//		if (s == null) {
-//			InputStream stream = GenericDAOHibernateImpl.class.getClass().getResourceAsStream("/sa_hibernate.cfg.xml");
-//			SessionFactory sf = new Configuration().configure(Utils.newDocumentFromInputStream(stream)).buildSessionFactory();
-//			s = sf.openSession();
-//		}
-		/**
-		 * Implementação para hibernate 5
-		 */
-		if (sessionFactory == null) {
+	static {
+		SessionFactory sf = null;
+
+		try {
+			String filepath;
+			String jboss_home = System.getProperty("jboss.home.url");
+
+			if (jboss_home != null)
+				filepath = jboss_home + "/server/default/deploy/sa_hibernate.cfg.xml";
+			else
+				filepath = "sa_hibernate.cfg.xml";
+
+			sf = new Configuration().configure(filepath).buildSessionFactory();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		s = sf.openSession();
+	}
+
+	public void clearSession() {
+		synchronized (s) {
 			try {
-				// Create registry
-				registry = new StandardServiceRegistryBuilder().configure().build();
-				// Create MetadataSources
-				MetadataSources sources = new MetadataSources(registry);
-				// Create Metadata
-				Metadata metadata = sources.getMetadataBuilder().build();
-				// Create SessionFactory
-				sessionFactory = metadata.getSessionFactoryBuilder().build();
-				s = sessionFactory.openSession();
+				s.clear();
 			} catch (Exception e) {
 				e.printStackTrace();
-				if (registry != null) {
-					StandardServiceRegistryBuilder.destroy(registry);
-				}
 			}
 		}
 	}
 
-	public void clearSession() {
-		try {
-			s.clear();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public T save(T instance) {
-		Transaction tx = null;
+		synchronized (s) {
+			Transaction tx = null;
 
-		try {
-			tx = s.beginTransaction();
-			System.out.println("Saving " + instance.toString());
-			s.save(instance);
-			System.out.println("Commiting " + instance.toString());
-			tx.commit();
-		} catch (RuntimeException e) {
-			if (tx != null)
-				tx.rollback();
+			try {
+				tx = s.beginTransaction();
+				System.out.println("Saving " + instance.toString());
+				s.save(instance);
+				System.out.println("Commiting " + instance.toString());
+				tx.commit();
+			} catch (Exception e) {
+				if (tx != null)
+					tx.rollback();
 
-			e.printStackTrace();
+				e.printStackTrace();
+			}
+
+			return instance;
 		}
-
-		return instance;
 	}
 
 	public T read(Class<T> clazz, long id) {
-		Object object = s.get(clazz, id);
-		return clazz.cast(object);
+		synchronized (s) {
+			Object object = s.get(clazz, id);
+			return clazz.cast(object);
+		}
 	}
 
 	public List<T> readAll(Class<T> clazz) {
-		Query query = s.createQuery("from " + clazz.getName());
-
-		@SuppressWarnings("unchecked")
-		List<T> list = query.list();
-
-		return list;
+		synchronized (s) {
+			TypedQuery<T> query = s.createQuery("from " + clazz.getName(), clazz);
+			return query.getResultList();
+		}
 	}
 
 }

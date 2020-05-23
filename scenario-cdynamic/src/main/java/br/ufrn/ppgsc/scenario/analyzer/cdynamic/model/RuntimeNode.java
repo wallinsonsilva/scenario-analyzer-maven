@@ -43,7 +43,7 @@ public class RuntimeNode implements Serializable {
 
 	@Column(name = "time")
 	private long executionTime;
-	
+
 	@Column(name = "real_time")
 	private long realExecutionTime;
 
@@ -51,9 +51,7 @@ public class RuntimeNode implements Serializable {
 	private boolean isConstructor;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "node_annotation",
-		joinColumns = @JoinColumn(name = "node_id"),
-		inverseJoinColumns = @JoinColumn(name = "annotation_id"))
+	@JoinTable(name = "node_annotation", joinColumns = @JoinColumn(name = "node_id"), inverseJoinColumns = @JoinColumn(name = "annotation_id"))
 	private Set<RuntimeGenericAnnotation> annotations;
 
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -66,11 +64,13 @@ public class RuntimeNode implements Serializable {
 	private List<RuntimeNode> children;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "node_scenario",
-		joinColumns = @JoinColumn(name = "node_id"),
-		inverseJoinColumns = @JoinColumn(name = "scenario_id"))
+	@JoinTable(name = "node_scenario", joinColumns = @JoinColumn(name = "node_id"), inverseJoinColumns = @JoinColumn(name = "scenario_id"))
 	@OrderBy("root asc")
 	private List<RuntimeScenario> scenarios;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "node_id", referencedColumnName = "id")
+	private List<RuntimeQuery> queries;
 
 	public RuntimeNode() {
 
@@ -79,6 +79,7 @@ public class RuntimeNode implements Serializable {
 	public RuntimeNode(Member member) {
 		children = new ArrayList<RuntimeNode>();
 		scenarios = new ArrayList<RuntimeScenario>();
+		queries = new ArrayList<RuntimeQuery>();
 		memberSignature = MemberUtil.getStandartMethodSignature(member);
 		annotations = RuntimeCallGraph.getInstance().parseMemberAnnotations(member);
 		isConstructor = member instanceof Constructor;
@@ -111,11 +112,11 @@ public class RuntimeNode implements Serializable {
 	public long getExecutionTime() {
 		return executionTime;
 	}
-	
+
 	public long getRealExecutionTime() {
 		return realExecutionTime;
 	}
-	
+
 	public void setRealExecutionTime(long realExecutionTime) {
 		this.realExecutionTime = realExecutionTime;
 	}
@@ -168,8 +169,24 @@ public class RuntimeNode implements Serializable {
 		this.children = children;
 	}
 
+	public void removeChildren(RuntimeNode node) {
+		children.remove(node);
+	}
+
 	public void addChild(RuntimeNode node) {
 		children.add(node);
+	}
+
+	public List<RuntimeQuery> getQueries() {
+		return queries;
+	}
+
+	public void setQueries(List<RuntimeQuery> queries) {
+		this.queries = queries;
+	}
+
+	public void addQuery(RuntimeQuery query) {
+		this.queries.add(query);
 	}
 
 }

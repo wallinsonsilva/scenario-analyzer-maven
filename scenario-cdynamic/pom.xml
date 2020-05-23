@@ -7,7 +7,7 @@
 	<version>1.0.0</version>
 
 	<properties>
-		<aspectj.version>1.8.4</aspectj.version>
+		<aspectj.runtime.version>1.9.2</aspectj.runtime.version>
 		<java.source-target.version>1.8</java.source-target.version>
 		<maven.test.skip>true</maven.test.skip>
 	</properties>
@@ -15,32 +15,48 @@
 
 	<build>
 		<plugins>
+			<!-- <plugin> -->
+			<!-- <artifactId>maven-assembly-plugin</artifactId> -->
+			<!-- <configuration> -->
+			<!-- <appendAssemblyId>false</appendAssemblyId> -->
+			<!-- <descriptorRefs> -->
+			<!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
+			<!-- </descriptorRefs> -->
+			<!-- </configuration> -->
+			<!-- <executions> -->
+			<!-- <execution> -->
+			<!-- <id>make-assembly</id> this is used for inheritance merges -->
+			<!-- <phase>package</phase> bind to the packaging phase -->
+			<!-- <goals> -->
+			<!-- <goal>single</goal> -->
+			<!-- </goals> -->
+			<!-- </execution> -->
+			<!-- </executions> -->
+			<!-- </plugin> -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
 				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					<source>${java.source-target.version}</source>
+					<target>${java.source-target.version}</target>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.7</version>
+				<version>1.10</version>
+				<configuration>
+					<source>${java.source-target.version}</source>
+					<target>${java.source-target.version}</target>
+					<complianceLevel>${java.source-target.version}</complianceLevel>
+					<includes>
+						<include>**/*.java</include>
+						<include>**/*.aj</include>
+					</includes>
+				</configuration>
 				<executions>
 					<execution>
-						<id>make-aspect</id>
-						<phase>package</phase>
+						<id>compile_with_aspectj</id>
 						<goals>
 							<goal>compile</goal>
 						</goals>
@@ -49,21 +65,15 @@
 				<dependencies>
 					<dependency>
 						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>${aspectj.runtime.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjtools</artifactId>
-						<version>${aspectj.version}</version>
+						<version>${aspectj.runtime.version}</version>
 					</dependency>
 				</dependencies>
-				<configuration>
-					<source>${java.source-target.version}</source>
-					<target>${java.source-target.version}</target>
-					<complianceLevel>${java.source-target.version}</complianceLevel>
-					<forceAjcCompile>true</forceAjcCompile>
-					<XnoInline>true</XnoInline>
-					<showWeaveInfo>true</showWeaveInfo>
-					<weaveDirectories>
-						<weaveDirectory>${project.build.directory}/classes</weaveDirectory>
-					</weaveDirectories>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -84,14 +94,14 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.3-1102-jdbc41</version>
+			<version>42.2.10</version>
 		</dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.3.7.Final</version>
-        </dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.3.7.Final</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -99,10 +109,20 @@
 			<version>4.13</version>
 		</dependency>
 
+		<!-- POR SE TRATAR DO PROJETO DOS ASPECTOS PARA INTRUMENTACAO, AS DUAS 
+			DEPENDENCIAS (aspectjrt E aspectjtools) DEVEM SER REFERENCIADAS NO PLUGIN 
+			QUE COMPILA O ASPECTO -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>${aspectj.version}</version>
+			<version>${aspectj.runtime.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjtools</artifactId>
+			<version>${aspectj.runtime.version}</version>
 		</dependency>
 
 		<dependency>
@@ -117,11 +137,19 @@
 			<version>2.6</version>
 		</dependency>
 
-	<dependency>
-		<groupId>javassist</groupId>
-		<artifactId>javassist</artifactId>
-		<version>3.12.0.GA</version>
-	</dependency>
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.12.0.GA</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
 
 	</dependencies>
 

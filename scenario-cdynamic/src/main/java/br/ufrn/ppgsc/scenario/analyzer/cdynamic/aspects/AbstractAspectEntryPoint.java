@@ -26,8 +26,10 @@ import br.ufrn.ppgsc.scenario.analyzer.cdynamic.util.RuntimeCallGraph;
  * de cenário no caminho, cria-se um subcenário, considerando-se mais uma execução para
  * o mesmo. A cenário externo não será afetado.
  * 
+ * TODO: verificar o quanto as interceptações e operações feitas dentro dos aspectos estão
  * influenciando negativamente na medição do tempo para executar um nó ou um cenário inteiro.
  * 
+ * TODO: limitação para quando o cenário já iniciou e o mesmo se divide em threads.
  * Testar isso http://dev.eclipse.org/mhonarc/lists/aspectj-users/msg12554.html
  */
 @Aspect
@@ -48,17 +50,16 @@ public abstract class AbstractAspectEntryPoint {
 	}
 
 	@Pointcut("!within(br.ufrn.ppgsc.scenario.analyzer..*) && !exclusionPoint()")
-	private final void exclusionPointFlow() {
+	protected final void exclusionPointFlow() {
 	}
 
 	@Pointcut("cflow(entryPoint()) && (execution(* *(..)) || execution(*.new(..)))")
-	private final void entryPointFlow() {
+	protected final void entryPointFlow() {
 	}
 
 	@SuppressAjWarnings
 	@Around("entryPointFlow() && exclusionPointFlow()")
 	public final Object cgbuilding(ProceedingJoinPoint thisJoinPoint) throws Throwable {
-		System.out.println("ENTROU NO METODO: cgbuilding");
 		long begin, end;
 
 		SystemExecution execution = RuntimeCallGraph.getInstance().getCurrentExecution();
@@ -71,22 +72,20 @@ public abstract class AbstractAspectEntryPoint {
 		RuntimeNode node = new RuntimeNode(member);
 
 		/*
-		 * Se achou a anotação de cenário, começa a criar as estruturas para o
-		 * elemento. Depois adiciona para a execução atual.
+		 * Se achou a anotação de cenário, começa a criar as estruturas para o elemento.
+		 * Depois adiciona para a execução atual.
 		 */
-//		System.out.println(nodes_stack.empty());
-		if (AspectUtil.isScenarioEntryPoint(member, br.ufrn.ppgsc.scenario.analyzer.common.annotations.arq.Scenario.class, nodes_stack.empty())) {
+		if (AspectUtil.isScenarioEntryPoint(member, getAnnotationClass(), nodes_stack.empty())) {
 			RuntimeScenario scenario = new RuntimeScenario(AspectUtil.getEntryPointName(member, getAnnotationClass()),
-					node, AspectUtil.getContextParameterMap());
+					node);
 
 			execution.addRuntimeScenario(scenario);
 			scenarios_stack.push(scenario);
 		} else if (nodes_stack.empty()) {
 			/*
-			 * Se a pilha estiver vazia e a anotação não existe neste ponto é porque
-			 * estamos executando um método que não faz parte de um cenário anotado.
-			 * Considerando que pegamos o fluxo de uma execução anotada, isto nunca
-			 * deveria acontecer.
+			 * Se a pilha estiver vazia e a anotação não existe neste ponto é porque estamos
+			 * executando um método que não faz parte de um cenário anotado. Considerando
+			 * que pegamos o fluxo de uma execução anotada, isto nunca deveria acontecer.
 			 */
 			throw new RuntimeException("AbstractAspectAnnotatedEntryPoint: stack of nodes is empty!");
 		}
@@ -105,9 +104,9 @@ public abstract class AbstractAspectEntryPoint {
 		node.setScenarios(new ArrayList<RuntimeScenario>(scenarios_stack));
 		nodes_stack.push(node);
 
-		begin = System.nanoTime();
+		begin = System.currentTimeMillis();
 		Object o = thisJoinPoint.proceed();
-		end = System.nanoTime();
+		end = System.currentTimeMillis();
 
 		/*
 		 * Retira os elementos das pilhas e salva as informações no banco de dados
@@ -129,8 +128,7 @@ public abstract class AbstractAspectEntryPoint {
 	}
 
 	// Intercepta capturas de exceções após seu lançamento
-	// before(Throwable t) : handler(Throwable+) && args(t) && executionFlow() &&
-	// !executionIgnored() {
+	// before(Throwable t) : handler(Throwable+) && args(t) && executionFlow() && !executionIgnored() {
 	@SuppressAjWarnings
 	@Before("handler(Throwable+) && args(t) && entryPointFlow() && exclusionPointFlow()")
 	public final void handlingException(JoinPoint.EnclosingStaticPart thisEnclosingJoinPointStaticPart, Throwable t) {

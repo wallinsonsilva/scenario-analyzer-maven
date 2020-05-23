@@ -1,5 +1,6 @@
 package br.ufrn.ppgsc.scenario.analyzer.cdynamic.db;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -20,9 +21,12 @@ public class GenericDAOFileImpl<T extends Serializable> implements GenericDAO<T>
 		RuntimeScenario rs = (RuntimeScenario) instance;
 
 		try {
-			PrintStream ps = new PrintStream("scenario_" + ++count +
-					"_" + rs.getRoot().getMemberSignature() + ".txt");
+			File file = new File("scenario_" + ++count + "_" + rs.getRoot().getMemberSignature() + ".txt");
+			System.out.println("Save file path: " + file.getAbsolutePath());
+
+			PrintStream ps = new PrintStream(file);
 			RuntimeCallGraphPrintUtil.logScenarioTree(rs, ps);
+
 			ps.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -32,10 +36,12 @@ public class GenericDAOFileImpl<T extends Serializable> implements GenericDAO<T>
 	}
 
 	public T read(Class<T> clazz, long id) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public List<T> readAll(Class<T> clazz) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
