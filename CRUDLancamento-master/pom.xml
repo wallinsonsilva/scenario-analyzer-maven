@@ -52,6 +52,9 @@
 
 		<!-- Primefaces theme -->
 		<ptheme.version>1.0.10</ptheme.version>
+
+		<!-- Versão do Aspecto -->
+		<aspectj.runtime.version>1.9.2</aspectj.runtime.version>
 	</properties>
 
 	<build>
@@ -66,44 +69,55 @@
 					<target>${java.version}</target>
 				</configuration>
 			</plugin>
-			<!-- Plugin para aspecto -->
+			<!-- PLUGIN PARA COMPILAÇÃO COM ASPECTOS -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
 				<version>1.10</version>
 				<configuration>
+					<complianceLevel>1.8</complianceLevel>
 					<source>1.8</source>
 					<target>1.8</target>
-					<complianceLevel>8</complianceLevel>
+					<!-- <includes> -->
+					<!-- <include>**/controller/*.java</include> -->
+					<!-- <include>**/*.aj</include> -->
+					<!-- </includes> -->
+					<!-- <excludes> -->
+					<!-- <exclude>com/bilecki/filters/*</exclude> -->
+					<!-- </excludes> -->
+<!-- 					<aspectDirectory>src/main/aspect</aspectDirectory> -->
+<!-- 					<testAspectDirectory>src/test/aspect</testAspectDirectory> -->
 					<XaddSerialVersionUID>true</XaddSerialVersionUID>
 					<showWeaveInfo>true</showWeaveInfo>
-					<aspectLibraries>
-						<aspectLibrary>
+					<!-- COLOCAR DEPENDENCIAS CONTENDO OS ASPECTOS AQUI, SEM COLOCAR A VERSÃO -->
+					<!-- <aspectLibraries> -->
+					<!-- <aspectLibrary> -->
+					<!-- <groupId>br.ufrn.ppgsc.scenario.analyzer</groupId> -->
+					<!-- <artifactId>scenario-cdynamic</artifactId> -->
+					<!-- </aspectLibrary> -->
+<!-- 					</aspectLibraries> -->
+					<weaveDependencies>
+						<weaveDependency>
 							<groupId>br.ufrn.ppgsc.scenario.analyzer</groupId>
 							<artifactId>scenario-cdynamic</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
+						</weaveDependency>
+					</weaveDependencies>
 				</configuration>
 				<executions>
 					<execution>
 						<id>compile_with_aspectj</id>
-						<phase>process-classes</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
 					</execution>
 				</executions>
 				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjrt</artifactId>
-						<version>1.9.2</version>
-					</dependency>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>1.9.2</version>
-					</dependency>
+<!-- 					<dependency> -->
+<!-- 						<groupId>org.aspectj</groupId> -->
+<!-- 						<artifactId>aspectjtools</artifactId> -->
+<!-- 						<version>${aspectj.runtime.version}</version> -->
+<!-- 					</dependency> -->
+					<!-- REPETIR DEPENDENCIAS CONTENDO OS ASPECTOS AQUI COLOCANDO A VERSÃO -->
 					<dependency>
 						<groupId>br.ufrn.ppgsc.scenario.analyzer</groupId>
 						<artifactId>scenario-cdynamic</artifactId>
@@ -232,6 +246,8 @@
 		</dependency>
 
 
+		<!-- INICIA AQUI O CONJUNTO DE DEPENDENCIAS QUE PRECISAM ESTÁ NO PROJETO 
+			PARA QUE O CÓDIGO SEJA INTRUMENTADO -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -244,22 +260,41 @@
 			<version>1.0.0</version>
 		</dependency>
 
+		<!-- A DEPENDENCIA "aspectjrt" NÃO PRECISA SER REFERENCIADA NO PLUGIN QUE 
+			COMPILA O ASPECTO -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>1.9.2</version>
+			<version>${aspectj.runtime.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjtools</artifactId>
-			<version>1.9.2</version>
-		</dependency>
+		<!-- A DEPENDENCIA "aspectjtools" DEVE SER REFERENCIADA NO PLUGIN QUE COMPILA 
+			O ASPECTO -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.aspectj</groupId> -->
+<!-- 			<artifactId>aspectjtools</artifactId> -->
+<!-- 			<version>${aspectj.runtime.version}</version> -->
+<!-- 		</dependency> -->
 
+		<!-- COLOCAR DEPENDENCIAS COM ASPECTOS AQUI TAMBEM -->
 		<dependency>
 			<groupId>br.ufrn.ppgsc.scenario.analyzer</groupId>
 			<artifactId>scenario-cdynamic</artifactId>
 			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javassist</groupId>
+					<artifactId>javassist</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- TERMINA AQUI O CONJUNTO DE DEPENDENCIAS QUE PRECISAM ESTÁ NO PROJETO 
+			PARA QUE O CÓDIGO SEJA INTRUMENTADO -->
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
 		</dependency>
 
 	</dependencies>

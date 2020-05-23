@@ -7,8 +7,6 @@ br\ufrn\ppgsc\scenario\analyzer\cdynamic\model\RuntimeReliability.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\util\RuntimeCallGraph.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\model\RuntimePerformance.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\model\RuntimeSecurity.class
-br\ufrn\ppgsc\scenario\analyzer\cdynamic\aspects\AspectJUnit4EntryPoint.class
-br\ufrn\ppgsc\scenario\analyzer\cdynamic\aspects\AspectMBeanEntryPoint.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\model\RuntimeQuery.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\model\RuntimeRobustness.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\parsers\SecurityAnnotationParser.class
@@ -19,7 +17,6 @@ br\ufrn\ppgsc\scenario\analyzer\cdynamic\db\GenericDAOFileImpl.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\util\RuntimeCallGraphPrintUtil.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\db\GenericDAOHibernateImpl.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\parsers\GenericAnnotationParser.class
-br\ufrn\ppgsc\scenario\analyzer\cdynamic\aspects\AspectJUnit3EntryPoint.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\model\RuntimeNode.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\db\GenericDAO.class
 br\ufrn\ppgsc\scenario\analyzer\cdynamic\parsers\PerformanceAnnotationParser.class
