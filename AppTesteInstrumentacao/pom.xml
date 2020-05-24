@@ -14,7 +14,7 @@
 
 	<build>
 		<plugins>
-<!-- 		PLUGIN PARA GERAR O JAR CONTENDO TODAS AS DEPENDENCIAS -->
+			<!-- PLUGIN PARA GERAR O JAR CONTENDO TODAS AS DEPENDENCIAS -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -44,7 +44,7 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-<!-- 			PLUGIN PARA COMPILAÇÃO COM ASPECTOS -->
+			<!-- PLUGIN PARA COMPILAÇÃO COM ASPECTOS -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>aspectj-maven-plugin</artifactId>
@@ -53,21 +53,30 @@
 					<complianceLevel>1.8</complianceLevel>
 					<source>1.8</source>
 					<target>1.8</target>
-					<includes>
-						<include>**/*.java</include>
-						<include>**/*.aj</include>
-					</includes>
-					<aspectDirectory>src/main/aspect</aspectDirectory>
-					<testAspectDirectory>src/test/aspect</testAspectDirectory>
+					<!-- <includes> -->
+					<!-- <include>**/controller/*.java</include> -->
+					<!-- <include>**/*.aj</include> -->
+					<!-- </includes> -->
+					<!-- <excludes> -->
+					<!-- <exclude>com/bilecki/filters/*</exclude> -->
+					<!-- </excludes> -->
+					<!-- <aspectDirectory>src/main/aspect</aspectDirectory> -->
+					<!-- <testAspectDirectory>src/test/aspect</testAspectDirectory> -->
 					<XaddSerialVersionUID>true</XaddSerialVersionUID>
 					<showWeaveInfo>true</showWeaveInfo>
 					<!-- COLOCAR DEPENDENCIAS CONTENDO OS ASPECTOS AQUI, SEM COLOCAR A VERSÃO -->
-					<aspectLibraries>
-						<aspectLibrary>
+					<!-- <aspectLibraries> -->
+					<!-- <aspectLibrary> -->
+					<!-- <groupId>br.ufrn.ppgsc.scenario.analyzer</groupId> -->
+					<!-- <artifactId>scenario-cdynamic</artifactId> -->
+					<!-- </aspectLibrary> -->
+					<!-- </aspectLibraries> -->
+					<weaveDependencies>
+						<weaveDependency>
 							<groupId>br.ufrn.ppgsc.scenario.analyzer</groupId>
 							<artifactId>scenario-cdynamic</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
+						</weaveDependency>
+					</weaveDependencies>
 				</configuration>
 				<executions>
 					<execution>
@@ -78,11 +87,11 @@
 					</execution>
 				</executions>
 				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>${aspectj.runtime.version}</version>
-					</dependency>
+					<!-- <dependency> -->
+					<!-- <groupId>org.aspectj</groupId> -->
+					<!-- <artifactId>aspectjtools</artifactId> -->
+					<!-- <version>${aspectj.runtime.version}</version> -->
+					<!-- </dependency> -->
 					<!-- REPETIR DEPENDENCIAS CONTENDO OS ASPECTOS AQUI COLOCANDO A VERSÃO -->
 					<dependency>
 						<groupId>br.ufrn.ppgsc.scenario.analyzer</groupId>
@@ -120,11 +129,11 @@
 
 		<!-- A DEPENDENCIA "aspectjtools" DEVE SER REFERENCIADA NO PLUGIN QUE COMPILA 
 			O ASPECTO -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjtools</artifactId>
-			<version>${aspectj.runtime.version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.aspectj</groupId> -->
+<!-- 			<artifactId>aspectjtools</artifactId> -->
+<!-- 			<version>${aspectj.runtime.version}</version> -->
+<!-- 		</dependency> -->
 
 		<!-- COLOCAR DEPENDENCIAS COM ASPECTOS AQUI TAMBEM -->
 		<dependency>
@@ -134,7 +143,7 @@
 		</dependency>
 		<!-- TERMINA AQUI O CONJUNTO DE DEPENDENCIAS QUE PRECISAM ESTÁ NO PROJETO 
 			PARA QUE O CÓDIGO SEJA INTRUMENTADO -->
-			
+
 	</dependencies>
 
 </project>
